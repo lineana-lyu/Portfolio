@@ -85,7 +85,7 @@ a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:po
 .metric-caption{font-size:11px;color:var(--muted);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .overview-stage{display:grid;grid-template-columns:minmax(0,1fr) 241px;gap:12px;min-height:0;min-width:0}
 .preview-image-link{display:grid;place-items:center;position:relative;overflow:hidden;background:#161b18;min-height:0;min-width:0;border-radius:12px;border:1px solid #222a24}
-.preview-image-link img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain}
+.preview-image-link img{width:100%;height:100%;min-width:0;min-height:0;object-fit:contain}
 .preview-overlay{position:absolute;right:14px;bottom:14px;display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.96);padding:10px 13px;border-radius:7px;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:12px;color:var(--ink)}
 .preview-overlay strong{font-size:13px;font-weight:780}
 .preview-overlay>span{color:#a55d4f;font-weight:750}
@@ -116,7 +116,7 @@ a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:po
 .dashboard-insight p{font-size:13px;color:#516156;line-height:1.42;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dashboard-figure{margin:0;display:grid;grid-template-rows:minmax(0,1fr) 32px;min-width:0;min-height:0;overflow:hidden}
 .dashboard-image-button{position:relative;display:grid;place-items:center;min-width:0;min-height:0;width:100%;height:100%;padding:0;border:0;background:#171c19;cursor:zoom-in;overflow:hidden}
-.dashboard-image-button img{max-width:100%;max-height:100%;height:auto;width:auto;object-fit:contain}
+.dashboard-image-button img{width:100%;height:100%;min-width:0;min-height:0;object-fit:contain}
 .dashboard-image-button img.image-in{animation:image-in .21s ease both}
 @keyframes image-in{from{opacity:.45}to{opacity:1}}
 .zoom-hint{position:absolute;bottom:12px;right:12px;background:#f8faf7;padding:7px 11px;border-radius:6px;font-size:11px;font-weight:760;color:var(--ink);opacity:0;transition:opacity .2s}
