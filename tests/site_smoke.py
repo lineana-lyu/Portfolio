@@ -7,7 +7,7 @@ Requirements:
 """
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 for name in (
@@ -38,7 +38,7 @@ with sync_playwright() as p:
 
         assert page.locator(".sidebar-nav .nav-link").count() == 6
         assert page.locator('[data-view="overview"]').is_visible()
-        assert page.locator('[data-view="dashboard"]').is_hidden()
+        expect(page.locator('[data-view="dashboard"]')).to_be_hidden()
         assert page.locator(".insight-card").count() == 3
         assert "13,494,400.74" in page.locator("#view-overview").inner_text()
         assert "3.04" in page.locator("#view-overview").inner_text()
@@ -53,10 +53,10 @@ with sync_playwright() as p:
                 "(element) => element.classList.contains('sidebar-open')"
             )
         page.locator('.sidebar-nav a[data-route="customers"]').click()
-        assert page.locator("#view-dashboard").is_visible()
-        assert page.locator('[data-view="overview"]').is_hidden()
-        assert page.locator("#dashboard-title").inner_text() == "用户行为"
-        assert page.locator("#dashboard-image").get_attribute("src") == "assets/03_customers.png"
+        expect(page.locator("#view-dashboard")).to_be_visible()
+        expect(page.locator('[data-view="overview"]')).to_be_hidden()
+        expect(page.locator("#dashboard-title")).to_have_text("用户行为")
+        expect(page.locator("#dashboard-image")).to_have_attribute("src", "assets/03_customers.png")
         assert_image_loaded(page)
         assert "3.04%" in page.locator("#dashboard-takeaway").inner_text()
         assert page.locator('.sidebar-nav a[data-route="customers"]').get_attribute("aria-current") == "page"
@@ -69,19 +69,19 @@ with sync_playwright() as p:
         page.locator("#image-zoom-trigger").click()
         assert page.locator("#zoom-dialog").evaluate("(el) => el.open")
         page.keyboard.press("ArrowRight")
-        assert page.locator("#dashboard-title").inner_text() == "履约体验"
-        assert page.locator("#zoom-image").get_attribute("src") == "assets/04_fulfillment.png"
+        expect(page.locator("#dashboard-title")).to_have_text("履约体验")
+        expect(page.locator("#zoom-image")).to_have_attribute("src", "assets/04_fulfillment.png")
         page.keyboard.press("Escape")
         assert not page.locator("#zoom-dialog").evaluate("(el) => el.open")
 
         # Route buttons, browser hash navigation, evidence page.
         page.locator("#dashboard-next").click()
-        assert page.locator("#dashboard-title").inner_text() == "经营总览"
+        expect(page.locator("#dashboard-title")).to_have_text("经营总览")
         assert_image_loaded(page)
         page.evaluate("location.hash = '#evidence'")
-        assert page.locator("#view-evidence").is_visible()
+        expect(page.locator("#view-evidence")).to_be_visible()
         assert page.locator(".resource-item").count() == 4
-        assert page.locator("#view-dashboard").is_hidden()
+        expect(page.locator("#view-dashboard")).to_be_hidden()
 
         dims = page.evaluate(
             "() => ({ viewport:document.documentElement.clientWidth, "
