@@ -8,6 +8,14 @@
     { src: 'assets/03_customers.png', alt: 'Olist 用户行为看板：购买频次、Cohort 月度回购和 RFM 分层', caption: '用户行为 · 复购、Cohort 与 RFM', code: 'CUSTOMERS', name: '用户行为' },
     { src: 'assets/04_fulfillment.png', alt: 'Olist 履约体验看板：配送时效、客户评分与卖家表现', caption: '履约体验 · 配送时效与客户评价', code: 'FULFILLMENT', name: '履约体验' },
   ];
+  // Short page-specific reading guide; grounded in saved Notebook results or the existing Power BI screenshots.
+  const takeaways = [
+    '商品收入 R$13,494,400.74。结合月度订单和商品收入趋势，观察交易表现，而不只看单一总量。',
+    '月度、品类、RFM 用户与州级商品收入汇总一致，均为 R$13,494,400.74；具体金额口径不含运费。',
+    '94,983 名历史购买用户中，2,887 名重复购买（3.04%）。Cohort 为历史月度回购，不是未来流失预测。',
+    '提前送达组平均评分约 4.29，晚到 8 天及以上约 1.70；这只是分组关联，不代表因果结论。',
+  ];
+  const takeaway = document.getElementById('dashboard-takeaway');
   const tabs = [...document.querySelectorAll('.gallery-tab')];
   const image = document.getElementById('dashboard-image');
   const caption = document.getElementById('dashboard-caption');
@@ -30,6 +38,7 @@
     image.src = item.src;
     image.alt = item.alt;
     caption.textContent = item.caption;
+    takeaway.textContent = takeaways[current];
     stage.textContent = String(current + 1).padStart(2, '0') + ' — ' + item.code;
     counter.textContent = formatIndex(current);
     original.href = item.src;
