@@ -27,7 +27,10 @@ with sync_playwright() as playwright:
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto((ROOT / "index.html").as_uri())
         assert page.locator("h1").count() == 1
-        assert page.locator("main > section").count() == 3
+        assert page.locator("main > section").count() == 4
+        assert page.locator(".insight-card").count() == 3
+        assert "R$13,494,400.74" in page.locator("#findings").inner_text()
+        assert "3.04" in page.locator("#findings").inner_text()
         assert page.locator(".path-item").count() == 4
         assert page.locator(".gallery-tab").count() == 4
         assert page.locator("#dashboard-image").evaluate("(el) => el.naturalWidth > 0")
@@ -35,6 +38,7 @@ with sync_playwright() as playwright:
         assert page.locator("#dashboard-image").get_attribute("src") == "assets/03_customers.png"
         assert page.locator("#dashboard-image").evaluate("(el) => el.naturalWidth > 0")
         assert page.locator("#original-image").get_attribute("href") == "assets/03_customers.png"
+        assert "Cohort" in page.locator("#dashboard-takeaway").inner_text()
         page.locator("#image-zoom-trigger").click()
         assert page.locator("#zoom-dialog").evaluate("(el) => el.open")
         page.keyboard.press("ArrowRight")
@@ -43,6 +47,8 @@ with sync_playwright() as playwright:
         assert not page.locator("#zoom-dialog").evaluate("(el) => el.open")
         page.locator('[data-go-page="1"]').click()
         assert page.locator("#dashboard-image").get_attribute("src") == "assets/02_revenue.png"
+        assert "四维" not in page.locator("#dashboard-takeaway").inner_text()
+        assert "R$13,494,400.74" in page.locator("#dashboard-takeaway").inner_text()
         dimensions = page.evaluate("({document: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth})")
         assert dimensions["document"] <= dimensions["viewport"] + 1, dimensions
         assert not errors, errors
