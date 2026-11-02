@@ -50,7 +50,7 @@
       image.classList.add('image-in');
     }
     const view = dialog.querySelector('.lightbox-viewport');
-    if (dialog.open) view.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (dialog.open) view.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }
 
   tabs.forEach((tab, index) => {
