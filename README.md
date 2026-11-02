@@ -1,48 +1,35 @@
-# Olist · 数据分析作品集（SDD）
+# Olist · 用户回购分析作品集
 
-> **研究问题：交易增长之后，用户是否还会回来？**
+一个面向数据分析实习／校招的**业务分析案例**。网站负责清楚地说明「现象 → 判断过程 → 待验证的运营决策」，而不是重做 Power BI 大屏。
 
-这是面向数据分析实习／校招的业务推导型作品集。网站负责讲清问题、方法选择和判断边界；Power BI 在后续版本作为原生数据证据嵌入，不重复开发图表。
+## 当前页面（内容减法版）
 
-## 当前状态
+- 主结论：历史样本中 96.96% 的用户只购买一次（截图来源，待 SQL 对账）。
+- 三条关键判断：用户去重口径、Cohort 观察时间公平性、RFM 频次集中造成的分群局限。
+- 运营假设：优先验证首购后二次购买，设计随机对照实验；没有编造实施结果。
+- 一处原生 HTML 折叠内容：指标口径与尚未验证的判断。
+- 没有重复 KPI 卡片、五步标签交互、重复图表或展示用的开发状态标签。
 
-- **M1 已实现并完成模块审查**：首屏、两个主指标、五步可交互的业务推导、口径说明。
-- **数据待复核**：数值暂来自既有 Power BI 截图；SQL 对账属于 M2。
-- **Power BI 尚未接入**：本地 `.pbix` 不能直接通过 iframe 展示；公开嵌入属于 M3。
-- **尚未部署公共网址**：部署与访客访问验收属于 M5。
-- 当前唯一维护仓库：`lineana-lyu/Portfolio`，默认分支 `main`。
+## 文件与运行
 
-## 本地预览
+- `index.html`：页面内容与语义结构
+- `styles.css`：响应式深色样式
+- `tests/m1_smoke.py`：1440px / 375px 渲染与交互冒烟测试
+- `SPEC.md`：经 CR-001 更新的 v1.1 规格
+- `changes/CR-001-content-reduction.md`：内容减法决策依据
+- `reviews/SDD-03-content-reduction.md`：模块复审记录
 
-直接双击 `index.html`，或运行：
+运行：直接打开 `index.html`，或在仓库根目录执行 `python -m http.server 8000`。
 
+测试（需 Playwright 和 Chromium）：
 ```bash
-python -m http.server 8000
+CHROMIUM_PATH=/usr/bin/chromium python tests/m1_smoke.py
 ```
 
-然后访问 `http://localhost:8000/`。
+## 当前仍缺什么
 
-项目使用原生 HTML、CSS、JavaScript，无第三方运行时依赖。
+**尚未正式完成求职作品集，也没有公共网址。**
 
-## 规格、代码和质量门槛
+M2 需补齐 SQL 对账与 Cohort 观察窗口核验；M3 将使用真正的 Power BI Service 公开嵌入链接显示原生报表（需检查公开数据风险），不会把截图冒充可交互报表。后续发布前再验证未登录访客访问。
 
-- [SPEC.md](SPEC.md)：冻结需求、分析边界、可测试验收条件
-- [index.html](index.html)：语义化结构、业务问题与关键指标
-- [styles.css](styles.css)：响应式、精简深色视觉规范
-- [app.js](app.js)：五步业务推导内容和交互
-- [M1 审查](reviews/SDD-02-M1-review.md)：逐模块业务及工程批判性审查
-- [M1 冒烟测试](tests/m1_smoke.py)：桌面／手机、Tab、键盘、折叠与页面溢出
-
-测试依赖 Playwright：
-
-```bash
-pip install playwright
-playwright install chromium
-python tests/m1_smoke.py
-```
-
-## 下一步
-
-**M2：证据对账。** 优先核验用户唯一标识、订单筛选、购买频次和 Cohort 成熟窗口；提供关键 SQL 与结果，只有证据可靠后才更新为「已核验」。
-
-**没有做的事不得写成成果**：目前不是流失预测模型，没有运营 A/B 结果，也没有已公开可交互的 Power BI 在线报表。
+当前已确认的主线是历史交易行为描述，**不是流失预测或已完成的运营实验**。
