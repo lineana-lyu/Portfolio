@@ -2,37 +2,84 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#101314">
-  <meta name="description" content="Olist 电商用户回购分析：用购买频次、Cohort 和 RFM 的局限，解释一次购买现象与下一步运营验证。">
-  <title>Olist · 用户回购分析</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111414">
+  <meta name="description" content="Olist 电商经营与用户行为分析作品集：项目背景、分析路径及 Power BI 原生交互报表。">
+  <title>Olist｜电商经营分析作品集</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="page" id="top">
     <header class="topbar">
-      <a class="brand" href="#top">OLIST <span>/ DATA CASE</span></a>
-      <a class="github" href="https://github.com/lineana-lyu/Portfolio" target="_blank" rel="noopener noreferrer">项目源码 <span aria-hidden="true">↗</span></a>
+      <a class="brand" href="#top" aria-label="返回作品集顶部">OLIST <span>/ ANALYTICS</span></a>
+      <a class="source" href="https://github.com/lineana-lyu/Portfolio" target="_blank" rel="noopener noreferrer">GitHub 源码 <span aria-hidden="true">↗</span></a>
     </header>
+
     <main>
-      <section class="hero" aria-labelledby="headline">
-        <p class="eyebrow">巴西电商 · 历史交易分析</p>
-        <h1 id="headline"><em>96.96%</em> 的用户，只买了一次。</h1>
-        <p class="summary">在 94,983 名历史购买用户中，仅 2,887 名购买至少两次。<strong>这是否值得投入二次购买运营？</strong></p>
-        <p class="meta">Olist 公开数据 · 订单口径排除 canceled / unavailable · 指标待最终 SQL 对账</p>
+      <section class="intro" aria-labelledby="project-title">
+        <p class="eyebrow">DATA ANALYTICS / CASE STUDY</p>
+        <h1 id="project-title">Olist 电商经营与用户行为分析</h1>
+        <p class="intro-copy">基于 Olist 巴西电商公开交易数据，使用 MySQL 关联九张业务表并建立经营指标，通过 Power BI 分析经营趋势、收入结构、用户行为与订单履约，呈现平台的业务表现及值得进一步研究的问题。</p>
+        <p class="meta">历史公开数据 <span aria-hidden="true">·</span> MySQL <span aria-hidden="true">·</span> Power BI</p>
       </section>
-      <section class="analysis" aria-labelledby="analysis-title">
-        <div class="heading"><h2 id="analysis-title">我怎么判断这件事</h2><p>从计算口径到运营假设</p></div>
-        <ol class="reason-list">
-          <li><span class="number" aria-hidden="true">01</span><div><h3>先确认是「人」，不是「订单行」</h3><p>用 <code>customer_unique_id</code> 识别用户，按去重订单计数；避免商品明细的一对多关联夸大购买次数。</p></div></li>
-          <li><span class="number" aria-hidden="true">02</span><div><h3>再问：新用户是不是还没时间复购？</h3><p>按首购月做 Cohort，检查后续自然月回购。现有看板显示多数后续月份回购比例较小；<strong>不同同期群的观察窗口仍需校验。</strong></p></div></li>
-          <li><span class="number" aria-hidden="true">03</span><div><h3>最后决定：哪些人值得触达？</h3><p>96.96% 的用户购买一次，RFM 的频次维度很难继续细分他们。不能仅凭「流失」标签定策略，下一步应验证更细的人群规则。</p></div></li>
-        </ol>
+
+      <section class="path-section" aria-labelledby="path-title">
+        <div class="section-heading">
+          <h2 id="path-title">分析路径</h2>
+          <p>先认识经营表现，再分别深入用户和履约问题</p>
+        </div>
+
+        <div class="path-primary">
+          <article class="path-card">
+            <span class="path-index">01 / 经营总览</span>
+            <h3>平台交易规模与增长趋势如何？</h3>
+            <p>GMV · 有效订单 · 月度变化</p>
+          </article>
+          <span class="path-arrow" aria-hidden="true">→</span>
+          <article class="path-card">
+            <span class="path-index">02 / 收入结构</span>
+            <h3>收入主要来自哪些品类和地区？</h3>
+            <p>品类贡献 · 州级分布 · 支付方式</p>
+          </article>
+        </div>
+
+        <div class="branch-label"><span>进一步分析两个独立的运营问题</span></div>
+        <div class="path-secondary">
+          <article class="path-card path-branch">
+            <span class="path-index">03 / 用户行为</span>
+            <h3>用户是否重复购买？</h3>
+            <p>购买频次 · Cohort · RFM</p>
+          </article>
+          <article class="path-card path-branch">
+            <span class="path-index">04 / 履约体验</span>
+            <h3>配送时效与客户评价有何关联？</h3>
+            <p>配送偏差 · 客户评分 · 卖家表现</p>
+          </article>
+        </div>
       </section>
-      <section class="decision" aria-labelledby="decision-title"><span class="decision-label">业务判断</span><h2 id="decision-title">先验证二次购买机会，不急着给所有人发券。</h2><p>以具备足够观察期的首购用户为候选人群，设计对照实验，检验 <strong>30/60 天增量二次购买率</strong>，同时关注触达与优惠成本。策略尚未实施。</p></section>
-      <details class="notes"><summary>数据口径与分析局限 <span aria-hidden="true">＋</span></summary><div><p>这里的历史购买指研究筛选口径内的订单（排除 canceled、unavailable），并不全部等于已妥投订单。3.04% 是历史复购率，不是未来流失概率，也没有行业对照。</p><p>Cohort 需要排除尚未达到相同观察时长的月份；RFM 是描述性分层而非流失预测模型。关键 SQL 和原生 Power BI 报表将在证据模块接入，当前不将静态图片冒充交互报表。</p></div></details>
+
+      <section class="report-section" id="dashboard" aria-labelledby="report-title">
+        <div class="section-heading report-heading">
+          <div>
+            <h2 id="report-title">Power BI 交互分析看板</h2>
+            <p>原生四页报表 · 可筛选、探索和查看详细数据</p>
+          </div>
+          <a id="report-link" class="report-link" href="#" target="_blank" rel="noopener noreferrer" hidden>独立打开报表 <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="report-surface">
+          <div class="report-empty" id="report-empty" role="status">
+            <span class="empty-mark" aria-hidden="true">▦</span>
+            <h3>Power BI 交互报表尚未接入</h3>
+            <p>取得 Power BI Service 的公开嵌入链接后，将在此展示原生四页报表。</p>
+          </div>
+          <iframe id="report-frame" title="Olist 电商经营分析 Power BI 原生交互报表" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen hidden></iframe>
+        </div>
+        <p class="report-note">报表使用历史公开数据；图表内容和交互由 Power BI 提供。</p>
+      </section>
     </main>
-    <footer>Olist · 用户回购分析 <span>历史数据 / 非真实运营实验</span></footer>
+
+    <footer class="footer"><span>OLIST · DATA ANALYTICS PORTFOLIO</span><a href="https://github.com/lineana-lyu/Portfolio" target="_blank" rel="noopener noreferrer">查看代码</a></footer>
   </div>
+  <script src="embed.js" defer></script>
 </body>
 </html>
