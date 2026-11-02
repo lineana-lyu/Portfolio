@@ -1,106 +1,191 @@
-/* Olist case-study gallery. UI mirrors the portfolio's project switcher, not a Power BI reimplementation. */
+/* Olist Analytics: hash-driven sidebar workbench. No framework; no fake Power BI embedding. */
 (() => {
   'use strict';
 
-  const pages = [
-    { src: 'assets/01_overview.png', alt: 'Olist 电商经营总览 Power BI 看板：GMV、有效订单和月度增长', caption: '经营总览 · GMV、有效订单与月度增长', code: 'OVERVIEW', name: '经营总览' },
-    { src: 'assets/02_revenue.png', alt: 'Olist 收入分析看板：巴西州级地图、商品类目、支付方式与月度 GMV', caption: '收入结构 · 品类、地区与支付方式', code: 'REVENUE', name: '收入结构' },
-    { src: 'assets/03_customers.png', alt: 'Olist 用户行为看板：购买频次、Cohort 月度回购和 RFM 分层', caption: '用户行为 · 复购、Cohort 与 RFM', code: 'CUSTOMERS', name: '用户行为' },
-    { src: 'assets/04_fulfillment.png', alt: 'Olist 履约体验看板：配送时效、客户评分与卖家表现', caption: '履约体验 · 配送时效与客户评价', code: 'FULFILLMENT', name: '履约体验' },
-  ];
-  // Short page-specific reading guide; grounded in saved Notebook results or the existing Power BI screenshots.
-  const takeaways = [
-    '商品收入 R$13,494,400.74。结合月度订单和商品收入趋势，观察交易表现，而不只看单一总量。',
-    '月度、品类、RFM 用户与州级商品收入汇总一致，均为 R$13,494,400.74；具体金额口径不含运费。',
-    '94,983 名历史购买用户中，2,887 名重复购买（3.04%）。Cohort 为历史月度回购，不是未来流失预测。',
-    '提前送达组平均评分约 4.29，晚到 8 天及以上约 1.70；这只是分组关联，不代表因果结论。',
-  ];
-  const takeaway = document.getElementById('dashboard-takeaway');
-  const tabs = [...document.querySelectorAll('.gallery-tab')];
-  const image = document.getElementById('dashboard-image');
-  const caption = document.getElementById('dashboard-caption');
-  const counter = document.getElementById('gallery-count');
-  const stage = document.getElementById('stage-page');
-  const original = document.getElementById('original-image');
-  const missing = document.getElementById('assets-missing');
-  const dialog = document.getElementById('zoom-dialog');
-  const zoomImage = document.getElementById('zoom-image');
-  const zoomCaption = document.getElementById('zoom-caption');
-  const zoomCounter = document.getElementById('zoom-counter');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let current = 0;
-
-  const formatIndex = (index) => String(index + 1).padStart(2, '0') + ' / 04';
-  function render(index, focusTab = false) {
-    if (!pages[index]) return;
-    current = index;
-    const item = pages[current];
-    image.src = item.src;
-    image.alt = item.alt;
-    caption.textContent = item.caption;
-    takeaway.textContent = takeaways[current];
-    stage.textContent = String(current + 1).padStart(2, '0') + ' — ' + item.code;
-    counter.textContent = formatIndex(current);
-    original.href = item.src;
-    zoomImage.src = item.src;
-    zoomImage.alt = item.alt;
-    zoomCaption.textContent = item.name;
-    zoomCounter.textContent = formatIndex(current);
-    missing.hidden = true;
-    tabs.forEach((tab, tabIndex) => {
-      const selected = current === tabIndex;
-      tab.classList.toggle('is-active', selected);
-      tab.setAttribute('aria-pressed', String(selected));
-    });
-    if (focusTab) tabs[current].focus();
-    image.classList.remove('image-in');
-    if (!reducedMotion.matches) {
-      void image.offsetWidth;
-      image.classList.add('image-in');
+  const reportPages = [
+    {
+      route:'operations', index:'01', code:'OVERVIEW', label:'经营总览',
+      title:'经营总览', description:'平台交易规模、月度商品收入和订单趋势如何变化？',
+      src:'assets/01_overview.png',
+      alt:'Olist 电商经营总览 Power BI 原始看板',
+      caption:'经营总览 · GMV、有效订单与月度趋势',
+      takeaway:'商品收入汇总 R$13,494,400.74；结合月度订单量及商品收入趋势，观察历史交易表现。',
+    },
+    {
+      route:'revenue', index:'02', code:'REVENUE', label:'收入分析',
+      title:'收入分析', description:'不同品类、巴西各州及支付方式呈现怎样的收入结构？',
+      src:'assets/02_revenue.png',
+      alt:'Olist 收入分析 Power BI 原始看板：品类、州级地域和支付方式',
+      caption:'收入分析 · 品类贡献、地区分布及支付结构',
+      takeaway:'月度、品类、RFM 用户及州级商品收入四种汇总结果一致，均为 R$13,494,400.74（不含运费）。',
+    },
+    {
+      route:'customers', index:'03', code:'CUSTOMERS', label:'用户行为',
+      title:'用户行为', description:'用户是否重复购买？不同首购 Cohort 和 RFM 分群怎样表现？',
+      src:'assets/03_customers.png',
+      alt:'Olist 用户行为 Power BI 原始看板：重复购买、Cohort 与 RFM',
+      caption:'用户行为 · 历史复购、Cohort 月度回购与 RFM',
+      takeaway:'历史购买用户 94,983 名，其中重复购买用户 2,887 名，历史复购率 3.04%。该数字并非流失预测。',
+    },
+    {
+      route:'fulfillment', index:'04', code:'FULFILLMENT', label:'履约体验',
+      title:'履约体验', description:'配送是否准时？配送延迟组与客户评价有什么关联？',
+      src:'assets/04_fulfillment.png',
+      alt:'Olist 履约体验 Power BI 原始看板：配送延迟分组、评分与卖家表现',
+      caption:'履约体验 · 配送时效、客户评价与卖家表现',
+      takeaway:'提前送达订单组平均评分约 4.29；延迟 8 天及以上的订单组约 1.70。这是分组相关性，不证明因果。',
     }
-    const view = dialog.querySelector('.lightbox-viewport');
-    if (dialog.open) view.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  ];
+  const reportRoutes = reportPages.map(page => page.route);
+  const allowedRoutes = new Set(['overview', ...reportRoutes, 'evidence']);
+  const navItems = [...document.querySelectorAll('.sidebar-nav .nav-link')];
+  const overview = document.querySelector('[data-view="overview"]');
+  const dashboard = document.querySelector('[data-view="dashboard"]');
+  const evidence = document.querySelector('[data-view="evidence"]');
+  const main = document.getElementById('main');
+  const breadcrumb = document.getElementById('current-view-label');
+  const statusPage = document.getElementById('status-page');
+  const sidebar = document.getElementById('sidebar');
+  const toggleButton = document.getElementById('menu-toggle');
+  const closeButton = document.getElementById('sidebar-close');
+  const mobileScrim = document.getElementById('mobile-scrim');
+  const image = document.getElementById('dashboard-image');
+  const missing = document.getElementById('assets-missing');
+  const zoomDialog = document.getElementById('zoom-dialog');
+  const zoomImage = document.getElementById('zoom-image');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let currentRoute = 'overview';
+  let reportIndex = 0;
+
+  const pad = (index) => String(index + 1).padStart(2, '0');
+  const labelFor = (route) => route === 'overview' ? '项目概览'
+    : route === 'evidence' ? '技术证据'
+    : reportPages.find(page => page.route === route)?.label ?? '项目概览';
+
+  function setSidebarOpen(open) {
+    document.body.classList.toggle('sidebar-open', open);
+    toggleButton.setAttribute('aria-expanded', String(open));
+    toggleButton.setAttribute('aria-label', open ? '关闭侧边菜单' : '打开侧边菜单');
+    if (open) closeButton.focus();
   }
 
-  tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => render(index));
-    tab.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-        event.preventDefault();
-        const direction = event.key === 'ArrowRight' ? 1 : -1;
-        render((index + direction + pages.length) % pages.length, true);
+  function showReport(index) {
+    const page = reportPages[index];
+    if (!page) return;
+    reportIndex = index;
+    const fields = {
+      'dashboard-title':page.title,
+      'dashboard-description':page.description,
+      'dashboard-eyebrow':'POWER BI / ' + page.code,
+      'dashboard-progress':page.index + ' / 04',
+      'dashboard-counter':page.index + ' / 04',
+      'dashboard-window-page':page.index + ' — ' + page.code,
+      'dashboard-caption':page.caption,
+      'dashboard-takeaway':page.takeaway,
+      'zoom-caption':page.label,
+      'zoom-counter':page.index + ' / 04',
+    };
+    for (const [id, text] of Object.entries(fields)) {
+      document.getElementById(id).textContent = text;
+    }
+    if (image.getAttribute('src') !== page.src) {
+      image.setAttribute('src', page.src);
+      if (!reducedMotion.matches) {
+        image.classList.remove('image-in');
+        void image.offsetWidth;
+        image.classList.add('image-in');
       }
+    }
+    image.alt = page.alt;
+    document.getElementById('original-image').href = page.src;
+    zoomImage.src = page.src;
+    zoomImage.alt = page.alt;
+    missing.hidden = true;
+    if (zoomDialog.open) zoomDialog.querySelector('.lightbox-body').scrollLeft = 0;
+  }
+
+  function navigate(route) {
+    const key = allowedRoutes.has(route) ? route : 'overview';
+    const wasSame = currentRoute === key;
+    currentRoute = key;
+    const isReport = reportRoutes.includes(key);
+    overview.hidden = key !== 'overview';
+    dashboard.hidden = !isReport;
+    evidence.hidden = key !== 'evidence';
+    overview.classList.toggle('is-active', key === 'overview');
+    dashboard.classList.toggle('is-active', isReport);
+    evidence.classList.toggle('is-active', key === 'evidence');
+    if (isReport) showReport(reportRoutes.indexOf(key));
+    for (const link of navItems) {
+      const active = link.dataset.route === key;
+      link.classList.toggle('is-active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    }
+    breadcrumb.textContent = labelFor(key);
+    statusPage.textContent = key.toUpperCase();
+    document.title = labelFor(key) + ' | Olist 数据分析作品集';
+    main.scrollTop = 0;
+    setSidebarOpen(false);
+    // Navigation remains in the same viewport, so readers never have to scroll to another section.
+    if (!wasSame && document.readyState === 'complete' && !zoomDialog.open) {
+      main.focus({ preventScroll:true });
+    }
+  }
+
+  function routeFromHash() {
+    return decodeURIComponent(location.hash.replace(/^#/, '') || 'overview');
+  }
+  function openRoute(route) {
+    if (!allowedRoutes.has(route)) return;
+    if (location.hash !== '#' + route) location.hash = route;
+    else navigate(route);
+  }
+
+  document.querySelectorAll('a[data-route]').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      openRoute(link.dataset.route);
     });
+  });
+  window.addEventListener('hashchange', () => navigate(routeFromHash()));
+  toggleButton.addEventListener('click', () => setSidebarOpen(!document.body.classList.contains('sidebar-open')));
+  closeButton.addEventListener('click', () => { setSidebarOpen(false); toggleButton.focus(); });
+  mobileScrim.addEventListener('click', () => setSidebarOpen(false));
+  window.matchMedia('(min-width: 961px)').addEventListener('change', event => {
+    if (event.matches) setSidebarOpen(false);
   });
 
-  document.querySelectorAll('[data-go-page]').forEach((button) => {
-    button.addEventListener('click', () => {
-      render(Number(button.dataset.goPage));
-      document.getElementById('dashboards').scrollIntoView({
-        behavior: reducedMotion.matches ? 'auto' : 'smooth',
-        block: 'start',
-      });
-    });
-  });
+  function adjacent(direction) {
+    openRoute(reportRoutes[(reportIndex + direction + reportPages.length) % reportPages.length]);
+  }
+  document.getElementById('dashboard-prev').addEventListener('click', () => adjacent(-1));
+  document.getElementById('dashboard-next').addEventListener('click', () => adjacent(1));
+  document.getElementById('zoom-prev').addEventListener('click', () => adjacent(-1));
+  document.getElementById('zoom-next').addEventListener('click', () => adjacent(1));
 
   image.addEventListener('error', () => { missing.hidden = false; });
   document.getElementById('image-zoom-trigger').addEventListener('click', () => {
-    zoomImage.src = pages[current].src;
-    dialog.showModal();
+    zoomImage.src = reportPages[reportIndex].src;
+    zoomDialog.showModal();
     document.getElementById('zoom-close').focus();
   });
-  document.getElementById('zoom-close').addEventListener('click', () => dialog.close());
-  document.getElementById('zoom-prev').addEventListener('click', () => render((current + pages.length - 1) % pages.length));
-  document.getElementById('zoom-next').addEventListener('click', () => render((current + 1) % pages.length));
-  dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
-  document.addEventListener('keydown', (event) => {
-    if (!dialog.open) return;
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+  document.getElementById('zoom-close').addEventListener('click', () => zoomDialog.close());
+  zoomDialog.addEventListener('click', event => { if (event.target === zoomDialog) zoomDialog.close(); });
+  document.addEventListener('keydown', event => {
+    if (zoomDialog.open && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
       event.preventDefault();
-      render((current + (event.key === 'ArrowRight' ? 1 : -1) + pages.length) % pages.length);
+      adjacent(event.key === 'ArrowRight' ? 1 : -1);
+    } else if (event.key === 'Escape' && document.body.classList.contains('sidebar-open')) {
+      setSidebarOpen(false);
+      toggleButton.focus();
     }
   });
 
-  // Eagerly preload the remaining small preview images; the PBIX stays downloadable as-is.
-  pages.slice(1).forEach((page) => { const preload = new Image(); preload.src = page.src; });
+  // Keep original screenshots; never simulate native Power BI filters from static images.
+  for (const page of reportPages.slice(1)) {
+    const preload = new Image();
+    preload.src = page.src;
+  }
+  navigate(routeFromHash());
 })();
