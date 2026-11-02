@@ -35,6 +35,18 @@
 
 本项目使用**原生 HTML / CSS / JavaScript**，不依赖第三方前端框架或构建步骤；保留截图和源文件的原始格式。
 
+## 关键 SQL 与结果对账
+
+本仓库新增 3 份可独立运行的 MySQL 8.0+ 分析脚本：
+
+- [用户历史复购](sql/01_customer_repeat_purchase.sql)：用户去重、有效订单范围与复购率。
+- [Cohort 月度回购](sql/02_cohort_monthly_repeat.sql)：首购月份及完整可观察月份的回购。
+- [配送时效 × 客户评分](sql/03_delivery_review_by_delay.sql)：订单级评价、延迟分层和评价覆盖率。
+
+具体运行方法见 [SQL 使用说明](sql/README.md)，待核验数据与统计差异见 [SQL 对账清单](docs/SQL_VALIDATION.md)。
+
+**状态说明：**这些脚本是根据原始项目 SQL 笔记整理，尚未连接本地 MySQL 数据库实测，现有 Power BI 数字仍属于历史截图结果，不能宣称已完成同口径对账。
+
 ## 本地运行
 
 直接双击 `index.html`，或在仓库目录运行：
