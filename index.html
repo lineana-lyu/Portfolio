@@ -2,86 +2,37 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111415">
-  <meta name="description" content="Olist 电商分析作品集：通过购买频次、Cohort 与 RFM，展示从经营问题到可检验运营假设的业务推导。">
-  <title>Olist · 从经营现象到运营假设</title>
-<link rel="stylesheet" href="styles.css">
-
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101314">
+  <meta name="description" content="Olist 电商用户回购分析：用购买频次、Cohort 和 RFM 的局限，解释一次购买现象与下一步运营验证。">
+  <title>Olist · 用户回购分析</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="site-shell">
-    <header class="site-header">
-      <a class="wordmark" href="#top" aria-label="返回 Olist 项目顶部"><span class="wordmark-symbol" aria-hidden="true">◧</span> OLIST<span class="wordmark-light"> / CASE STUDY</span></a>
-      <div class="header-actions">
-        <span class="draft-state"><span aria-hidden="true" class="state-dot"></span>阶段 M1 · 数据待复核</span>
-        <a class="source-link" href="https://github.com/lineana-lyu/Portfolio" target="_blank" rel="noopener noreferrer">GitHub 源码 <span aria-hidden="true">↗</span></a>
-      </div>
+  <div class="page" id="top">
+    <header class="topbar">
+      <a class="brand" href="#top">OLIST <span>/ DATA CASE</span></a>
+      <a class="github" href="https://github.com/lineana-lyu/Portfolio" target="_blank" rel="noopener noreferrer">项目源码 <span aria-hidden="true">↗</span></a>
     </header>
-
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow">01 / ANALYTICAL CASE STUDY <span class="eyebrow-line" aria-hidden="true"></span> OLIST</p>
-          <h1 id="hero-title">交易增长之后，<br><span>用户是否还会回来？</span></h1>
-          <p class="hero-summary">从经营趋势提出问题，用购买频次、Cohort 月度回购和 RFM 分层逐步检查，再设计可验证的二次购买实验。</p>
-          <div class="hero-meta"><span>历史公开电商数据</span><span aria-hidden="true">·</span><span>MySQL / Power BI</span><span aria-hidden="true">·</span><span>描述性分析</span></div>
-          <a class="primary-link" href="#reasoning">查看分析推导 <span aria-hidden="true">↓</span></a>
-        </div>
-        <div class="hero-facts" aria-label="研究样本核心指标">
-          <div class="facts-head"><span>KEY OBSERVATIONS</span><span>来自现有 Power BI 截图</span></div>
-          <div class="fact"><div class="fact-label">历史购买用户 <span class="stat-note">去重用户</span></div><div class="fact-number" data-testid="buyers">94,983</div></div>
-          <div class="fact"><div class="fact-label">历史复购率 <span class="stat-note">≥2 笔订单</span></div><div class="fact-number accent" data-testid="repeat-rate">3.04<span class="unit">%</span></div></div>
-          <div class="facts-foot"><span>经营背景：商品 GMV 约 R$13.49M（不含运费）</span><span>指标尚待 SQL 对账</span></div>
-        </div>
+    <main>
+      <section class="hero" aria-labelledby="headline">
+        <p class="eyebrow">巴西电商 · 历史交易分析</p>
+        <h1 id="headline"><em>96.96%</em> 的用户，只买了一次。</h1>
+        <p class="summary">在 94,983 名历史购买用户中，仅 2,887 名购买至少两次。<strong>这是否值得投入二次购买运营？</strong></p>
+        <p class="meta">Olist 公开数据 · 订单口径排除 canceled / unavailable · 指标待最终 SQL 对账</p>
       </section>
-
-      <section class="reasoning" id="reasoning" aria-labelledby="reasoning-title">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow eyebrow-muted">02 / ANALYTICAL REASONING</div>
-            <h2 id="reasoning-title">一条分析主线，五次关键追问</h2>
-            <p>每一步回答一个业务追问，明确所用证据、当前判断与下一步。</p>
-          </div>
-          <p class="section-aside">从经营现象出发<br>而非从工具出发</p>
-        </div>
-
-        <p class="mobile-nav-hint">横向滑动查看全部五步 <span aria-hidden="true">→</span></p>
-        <div class="step-nav" role="tablist" aria-label="五步业务分析推导" aria-orientation="horizontal">
-          <button class="step" type="button" id="step-tab-0" role="tab" aria-controls="reason-panel" aria-selected="false" tabindex="-1" data-step="0"><span class="step-num">01</span><span class="step-name">经营信号</span><span class="step-sub">提出问题</span></button>
-          <button class="step is-current" type="button" id="step-tab-1" role="tab" aria-controls="reason-panel" aria-selected="true" tabindex="0" data-step="1"><span class="step-num">02</span><span class="step-name">购买频次</span><span class="step-sub">定位现象</span></button>
-          <button class="step" type="button" id="step-tab-2" role="tab" aria-controls="reason-panel" aria-selected="false" tabindex="-1" data-step="2"><span class="step-num">03</span><span class="step-name">Cohort 回购</span><span class="step-sub">检查时间</span></button>
-          <button class="step" type="button" id="step-tab-3" role="tab" aria-controls="reason-panel" aria-selected="false" tabindex="-1" data-step="3"><span class="step-num">04</span><span class="step-name">RFM 分层</span><span class="step-sub">划定人群</span></button>
-          <button class="step" type="button" id="step-tab-4" role="tab" aria-controls="reason-panel" aria-selected="false" tabindex="-1" data-step="4"><span class="step-num">05</span><span class="step-name">运营实验</span><span class="step-sub">等待验证</span></button>
-        </div>
-
-        <div class="reason-panel" id="reason-panel" role="tabpanel" aria-labelledby="step-tab-1" tabindex="0">
-          <div class="panel-lead">
-            <div class="panel-index" id="panel-index">STEP 02 / 05</div>
-            <h3 id="panel-title">观察期内，用户购买了几次？</h3>
-            <p id="panel-evidence">按 customer_unique_id 去重，以研究口径下的有效订单数统计用户购买频次。</p>
-            <div class="verification-label"><span aria-hidden="true">◌</span><span id="panel-status">指标来源于 Power BI 截图；SQL 结果待对账</span></div>
-          </div>
-          <div class="panel-conclusion">
-            <div class="content-block">
-              <div class="field-label">DATA-BASED FINDING / 数据判断</div>
-              <p id="panel-finding">94,983 名历史购买用户中，92,096 人只购买一次（96.96%）。</p>
-            </div>
-            <div class="next-block">
-              <div class="field-label">NEXT QUESTION / 下一步</div>
-              <p id="panel-next">不同首购月份的用户，后续自然月再次购买的情况是否相似？</p>
-            </div>
-            <details class="method-details" id="method-details">
-              <summary>方法口径与解释边界 <span aria-hidden="true" class="expand-glyph">+</span></summary>
-              <p id="panel-limit">「有效订单」暂排除 canceled/unavailable，仍可能包含未妥投订单；历史复购率不等同于未来流失率。</p>
-            </details>
-          </div>
-        </div>
-        <div class="section-bottom"><span>依据：既有 SQL 分析记录与 Power BI 截图</span><span>Power BI 原生交互及 SQL 复现链接将在后续模块接入</span></div>
+      <section class="analysis" aria-labelledby="analysis-title">
+        <div class="heading"><h2 id="analysis-title">我怎么判断这件事</h2><p>从计算口径到运营假设</p></div>
+        <ol class="reason-list">
+          <li><span class="number" aria-hidden="true">01</span><div><h3>先确认是「人」，不是「订单行」</h3><p>用 <code>customer_unique_id</code> 识别用户，按去重订单计数；避免商品明细的一对多关联夸大购买次数。</p></div></li>
+          <li><span class="number" aria-hidden="true">02</span><div><h3>再问：新用户是不是还没时间复购？</h3><p>按首购月做 Cohort，检查后续自然月回购。现有看板显示多数后续月份回购比例较小；<strong>不同同期群的观察窗口仍需校验。</strong></p></div></li>
+          <li><span class="number" aria-hidden="true">03</span><div><h3>最后决定：哪些人值得触达？</h3><p>96.96% 的用户购买一次，RFM 的频次维度很难继续细分他们。不能仅凭「流失」标签定策略，下一步应验证更细的人群规则。</p></div></li>
+        </ol>
       </section>
+      <section class="decision" aria-labelledby="decision-title"><span class="decision-label">业务判断</span><h2 id="decision-title">先验证二次购买机会，不急着给所有人发券。</h2><p>以具备足够观察期的首购用户为候选人群，设计对照实验，检验 <strong>30/60 天增量二次购买率</strong>，同时关注触达与优惠成本。策略尚未实施。</p></section>
+      <details class="notes"><summary>数据口径与分析局限 <span aria-hidden="true">＋</span></summary><div><p>这里的历史购买指研究筛选口径内的订单（排除 canceled、unavailable），并不全部等于已妥投订单。3.04% 是历史复购率，不是未来流失概率，也没有行业对照。</p><p>Cohort 需要排除尚未达到相同观察时长的月份；RFM 是描述性分层而非流失预测模型。关键 SQL 和原生 Power BI 报表将在证据模块接入，当前不将静态图片冒充交互报表。</p></div></details>
     </main>
-    <footer class="site-footer"><span>OLIST / ANALYTICS PORTFOLIO</span><span>研究假设 ≠ 已验证运营效果</span></footer>
+    <footer>Olist · 用户回购分析 <span>历史数据 / 非真实运营实验</span></footer>
   </div>
-<script src="app.js" defer></script>
 </body>
 </html>
