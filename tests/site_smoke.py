@@ -1,15 +1,16 @@
-"""Browser smoke checks for the published/static Olist case page.
+"""UI smoke tests for the Olist Analytics left-sidebar workbench.
 
-Run after cloning:
+Requirements:
     pip install playwright
     playwright install chromium
     python tests/site_smoke.py
 """
 from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-for resource in (
+for name in (
     "assets/01_overview.png",
     "assets/02_revenue.png",
     "assets/03_customers.png",
@@ -17,41 +18,77 @@ for resource in (
     "downloads/Olist_电商经营分析.pbix",
     "downloads/Olist_四页看板.pdf",
 ):
-    assert (ROOT / resource).is_file(), f"Missing: {resource}"
+    assert (ROOT / name).is_file(), f"Missing source asset: {name}"
 
-with sync_playwright() as playwright:
-    browser = playwright.chromium.launch(headless=True)
-    for width, height in ((1440, 900), (375, 812)):
+
+def assert_image_loaded(page):
+    page.wait_for_function(
+        "() => { const img = document.getElementById('dashboard-image'); "
+        "return img.complete && img.naturalWidth > 0; }"
+    )
+
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    for width, height in [(1440, 900), (375, 812)]:
         page = browser.new_page(viewport={"width": width, "height": height})
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto((ROOT / "index.html").as_uri())
-        assert page.locator("h1").count() == 1
-        assert page.locator("main > section").count() == 4
+
+        assert page.locator(".sidebar-nav .nav-link").count() == 6
+        assert page.locator('[data-view="overview"]').is_visible()
+        assert page.locator('[data-view="dashboard"]').is_hidden()
         assert page.locator(".insight-card").count() == 3
-        assert "R$13,494,400.74" in page.locator("#findings").inner_text()
-        assert "3.04" in page.locator("#findings").inner_text()
-        assert page.locator(".path-item").count() == 4
-        assert page.locator(".gallery-tab").count() == 4
-        assert page.locator("#dashboard-image").evaluate("(el) => el.naturalWidth > 0")
-        page.locator('.gallery-tab[data-index="2"]').click()
+        assert "13,494,400.74" in page.locator("#view-overview").inner_text()
+        assert "3.04" in page.locator("#view-overview").inner_text()
+        assert page.locator("body").evaluate(
+            "(element) => getComputedStyle(element).overflow === 'hidden'"
+        ), "Document should not be a vertically scrolling long page."
+
+        # Switch from left navigation; on mobile open the drawer first.
+        if width < 961:
+            page.locator("#menu-toggle").click()
+            assert page.locator("body").evaluate(
+                "(element) => element.classList.contains('sidebar-open')"
+            )
+        page.locator('.sidebar-nav a[data-route="customers"]').click()
+        assert page.locator("#view-dashboard").is_visible()
+        assert page.locator('[data-view="overview"]').is_hidden()
+        assert page.locator("#dashboard-title").inner_text() == "用户行为"
         assert page.locator("#dashboard-image").get_attribute("src") == "assets/03_customers.png"
-        assert page.locator("#dashboard-image").evaluate("(el) => el.naturalWidth > 0")
-        assert page.locator("#original-image").get_attribute("href") == "assets/03_customers.png"
-        assert "Cohort" in page.locator("#dashboard-takeaway").inner_text()
+        assert_image_loaded(page)
+        assert "3.04%" in page.locator("#dashboard-takeaway").inner_text()
+        assert page.locator('.sidebar-nav a[data-route="customers"]').get_attribute("aria-current") == "page"
+        if width < 961:
+            assert not page.locator("body").evaluate(
+                "(element) => element.classList.contains('sidebar-open')"
+            )
+
+        # Modal zoom and keyboard navigation follow the sidebar routes.
         page.locator("#image-zoom-trigger").click()
         assert page.locator("#zoom-dialog").evaluate("(el) => el.open")
         page.keyboard.press("ArrowRight")
+        assert page.locator("#dashboard-title").inner_text() == "履约体验"
         assert page.locator("#zoom-image").get_attribute("src") == "assets/04_fulfillment.png"
         page.keyboard.press("Escape")
         assert not page.locator("#zoom-dialog").evaluate("(el) => el.open")
-        page.locator('[data-go-page="1"]').click()
-        assert page.locator("#dashboard-image").get_attribute("src") == "assets/02_revenue.png"
-        assert "四维" not in page.locator("#dashboard-takeaway").inner_text()
-        assert "R$13,494,400.74" in page.locator("#dashboard-takeaway").inner_text()
-        dimensions = page.evaluate("({document: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth})")
-        assert dimensions["document"] <= dimensions["viewport"] + 1, dimensions
+
+        # Route buttons, browser hash navigation, evidence page.
+        page.locator("#dashboard-next").click()
+        assert page.locator("#dashboard-title").inner_text() == "经营总览"
+        assert_image_loaded(page)
+        page.evaluate("location.hash = '#evidence'")
+        assert page.locator("#view-evidence").is_visible()
+        assert page.locator(".resource-item").count() == 4
+        assert page.locator("#view-dashboard").is_hidden()
+
+        dims = page.evaluate(
+            "() => ({ viewport:document.documentElement.clientWidth, "
+            "document:document.documentElement.scrollWidth })"
+        )
+        assert dims["document"] <= dims["viewport"] + 1, dims
         assert not errors, errors
-        print(f"PASS: {width}x{height} layout, galleries, path navigation, zoom, keyboard")
+        print(f"PASS {width}x{height}: fixed shell / sidebar / routes / gallery / evidence / zero JS errors")
         page.close()
     browser.close()
