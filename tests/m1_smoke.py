@@ -1,35 +1,28 @@
-"""Content-focused acceptance for SDD CR-001; run: python tests/m1_smoke.py."""
-import os
+"""Smoke test for SPEC v2.0; run after cloning: python tests/site_smoke.py"""
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-HTML = (ROOT / "index.html").read_text(encoding="utf-8")
-CSS = (ROOT / "styles.css").read_text(encoding="utf-8")
-assert "app.js" not in HTML
-assert 'role="tablist"' not in HTML
-assert "阶段 M1" not in HTML
-with sync_playwright() as playwright:
-    opts = {"headless": True}
-    if os.environ.get("CHROMIUM_PATH"):
-        opts["executable_path"] = os.environ["CHROMIUM_PATH"]
-    browser = playwright.chromium.launch(**opts)
-    for width, height in ((1440, 900), (375, 812)):
+url = (ROOT / "index.html").resolve().as_uri()
+
+with sync_playwright() as pw:
+    browser = pw.chromium.launch(headless=True)
+    for width, height in [(1440, 900), (375, 812)]:
         page = browser.new_page(viewport={"width": width, "height": height})
         errors = []
-        page.on("pageerror", lambda e: errors.append(str(e)))
-        page.set_content(HTML, wait_until="load")
-        page.add_style_tag(content=CSS)
-        assert page.locator("h1").count() == 1
-        assert page.locator(".reason-list li").count() == 3
-        assert page.locator(".fact-number").count() == 0
-        assert page.get_by_role("link", name="项目源码").count() == 1
-        assert page.locator(".notes").get_attribute("open") is None
-        page.locator(".notes summary").click()
-        assert page.locator(".notes").get_attribute("open") is not None
-        dims = page.evaluate("({body: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth})")
-        assert dims["body"] <= dims["viewport"] + 1, dims
+        page.on("pageerror", lambda err: errors.append(str(err)))
+        page.goto(url, wait_until="load")
+        assert page.locator("main > section").count() == 3
+        assert page.locator(".path-card").count() == 4
+        assert page.get_by_role("heading", name="Olist 电商经营与用户行为分析").count() == 1
+        assert page.locator("#report-empty").is_visible()
+        assert page.locator("#report-frame").is_hidden()
+        assert page.locator("#report-link").is_hidden()
+        assert page.get_by_role("link", name="GitHub 源码").get_attribute("href").startswith("https://github.com/")
+        dims = page.evaluate("({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth})")
+        assert dims["scroll"] <= dims["client"] + 1, dims
         assert not errors, errors
-        print("PASS", width, height, "3 reasons, disclosure, no overflow or JS errors")
+        page.screenshot(path=str(ROOT / f"smoke_{width}.png"), full_page=True)
         page.close()
+        print(f"PASS: {width}x{height}, 3 sections, 4 topics, no overflow")
     browser.close()
