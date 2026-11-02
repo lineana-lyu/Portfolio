@@ -30,7 +30,7 @@ def assert_image_loaded(page):
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
-    for width, height in [(1440, 900), (375, 812)]:
+    for width, height in [(1440, 900), (1024, 768), (375, 812)]:
         page = browser.new_page(viewport={"width": width, "height": height})
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
@@ -40,6 +40,18 @@ with sync_playwright() as p:
         assert page.locator('[data-view="overview"]').is_visible()
         expect(page.locator('[data-view="dashboard"]')).to_be_hidden()
         assert page.locator(".insight-card").count() == 3
+        assert page.locator(".topic-card").count() == 0, "Old navigation cards must be removed."
+        assert page.locator(".preview-image-link img").evaluate(
+            "(image) => image.complete && image.naturalWidth > 0"
+        ), "A genuine dashboard preview must load."
+        expect(page.locator("#overview-title")).to_contain_text("Olist 电商经营分析")
+        assert page.locator(".overview-lead").evaluate(
+            "(element) => parseFloat(getComputedStyle(element).fontSize) >= 14"
+        ), "Readable overview text must not use tiny type."
+        if width >= 1200:
+            assert page.locator(".preview-image-link").evaluate(
+                "(element) => element.getBoundingClientRect().width > 580"
+            ), "Desktop preview should be visually prominent."
         assert "13,494,400.74" in page.locator("#view-overview").inner_text()
         assert "3.04" in page.locator("#view-overview").inner_text()
         assert page.locator("body").evaluate(
@@ -58,6 +70,9 @@ with sync_playwright() as p:
         expect(page.locator("#dashboard-title")).to_have_text("用户行为")
         expect(page.locator("#dashboard-image")).to_have_attribute("src", "assets/03_customers.png")
         assert_image_loaded(page)
+        assert page.locator("#dashboard-image").evaluate(
+            "(element) => element.getBoundingClientRect().width > 270"
+        ), "Original Power BI screenshot should remain prominent."
         assert "3.04%" in page.locator("#dashboard-takeaway").inner_text()
         assert page.locator('.sidebar-nav a[data-route="customers"]').get_attribute("aria-current") == "page"
         if width < 961:
@@ -81,6 +96,10 @@ with sync_playwright() as p:
         page.evaluate("location.hash = '#evidence'")
         expect(page.locator("#view-evidence")).to_be_visible()
         assert page.locator(".resource-item").count() == 4
+        assert page.locator(".method-step").count() == 3
+        assert page.locator(".resource-item strong").first.evaluate(
+            "(element) => parseFloat(getComputedStyle(element).fontSize) >= 14"
+        ), "Evidence links must use readable text."
         expect(page.locator("#view-dashboard")).to_be_hidden()
 
         dims = page.evaluate(
@@ -89,6 +108,6 @@ with sync_playwright() as p:
         )
         assert dims["document"] <= dims["viewport"] + 1, dims
         assert not errors, errors
-        print(f"PASS {width}x{height}: fixed shell / sidebar / routes / gallery / evidence / zero JS errors")
+        print(f"PASS {width}x{height}: editorial type / dashboard preview / fixed sidebar / routes / gallery / evidence")
         page.close()
     browser.close()
