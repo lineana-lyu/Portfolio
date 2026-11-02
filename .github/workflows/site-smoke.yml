@@ -30,5 +30,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install playwright
           python -m playwright install --with-deps chromium
-      - name: Check desktop and mobile navigation
+      - name: Validate six views and screenshot bounds
         run: python tests/site_smoke.py
+      - name: Upload visual regression screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-one-screen-screenshots
+          path: test-results/*.png
+          if-no-files-found: ignore
+          retention-days: 14
