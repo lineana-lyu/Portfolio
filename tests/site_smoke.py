@@ -68,8 +68,11 @@ def layout(page, route, viewport, desktop):
         button = all_rects["visible"][".dashboard-image-button"]
         assert image["top"] >= button["top"] - 1 and image["bottom"] <= button["bottom"] + 1
         assert image["left"] >= button["left"] - 1 and image["right"] <= button["right"] + 1
-        # Original 1551 x 874 image, displayed without cropping or distortion
-        assert abs(image["width"] / image["height"] - 1551 / 874) < 0.02, (route, image)
+        # Object-fit contain preserves original bitmap aspect ratio inside the frame.
+        assert page.locator("#dashboard-image").evaluate(
+            "(e) => getComputedStyle(e).objectFit === 'contain' && "
+            "e.naturalWidth === 1551 && e.naturalHeight === 874"
+        ), (route, "image fit / natural aspect")
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
