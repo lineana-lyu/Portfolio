@@ -24,5 +24,29 @@ function showPage(index) {
 }
 tabs.forEach((tab, index) => tab.addEventListener("click", () => showPage(index)));
 image.addEventListener("error", () => {
-  image.alt = "看板图片尚未上传至 GitHub。请按 README 上传 assets 目录。";
+  image.alt = "看板图片尚未上传至 GitHub。";
+  const warning = document.getElementById("assets-missing");
+  if (warning) warning.hidden = false;
 });
+
+// HTTP-hosted previews must not advertise a missing PBIX as downloadable.
+if (location.protocol === "https:" || location.protocol === "http:") {
+  const download = document.querySelector("a.download");
+  if (download) {
+    fetch(download.href, { method: "HEAD" })
+      .then(response => {
+        if (!response.ok) {
+          download.textContent = "Power BI 文件待上传";
+          download.removeAttribute("href");
+          download.removeAttribute("download");
+          download.setAttribute("aria-disabled", "true");
+        }
+      })
+      .catch(() => {
+        download.textContent = "Power BI 文件暂不可用";
+        download.removeAttribute("href");
+        download.removeAttribute("download");
+        download.setAttribute("aria-disabled", "true");
+      });
+  }
+}
