@@ -1,60 +1,64 @@
-# Olist 电商经营与用户行为分析｜作品集
+# Olist 电商经营与用户行为分析
 
-本仓库采用 **项目背景 → 分析路径 → 四页 Power BI 大屏图片** 三段式页面，目的是让招聘方快速了解分析任务并查看实际可视化成果。
+基于 Olist 巴西电商公开交易数据，使用 **MySQL + Power BI** 完成经营表现、收入结构、用户行为和履约体验分析，并以一个轻量作品集网页展示四张 Power BI 看板。
 
-目前**网页代码已更新；四张 PNG 大屏图和 .pbix 二进制文件尚未上传到 GitHub**。它们已经打包为可下载的完整本地网站包。完成下方上传后，GitHub Pages 才能正常加载图片及源文件下载链接。
+**[在线查看作品集](https://lineana-lyu.github.io/Portfolio/)** · [下载 Power BI 原文件](downloads/Olist_电商经营分析.pbix) · [下载四页 PDF](downloads/Olist_四页看板.pdf)
 
-## 网页功能
+![Olist 电商经营总览 Power BI 看板](assets/01_overview.png)
 
-- 01 经营总览
-- 02 收入分析
-- 03 用户行为与价值
-- 04 订单履约与客户体验
+## 项目内容
 
-在「Power BI 看板展示」区切换四张高清截图，并可打开原图。下载按钮指向原始 Power BI Desktop 报表文件（**静态图片本身不能筛选或交互**）。
+| 分析方向 | 回答的业务问题 | 主要方法 |
+| --- | --- | --- |
+| 经营总览 | 平台交易规模与月度趋势如何？ | GMV、订单数、月度趋势与环比 |
+| 收入结构 | 收入主要来自哪些品类和地区？ | 品类 GMV、州级分布、支付方式 |
+| 用户行为 | 用户是否重复购买，如何理解用户差异？ | 购买频次、Cohort 月度回购、RFM |
+| 履约体验 | 配送时效和客户评分有何关联？ | 配送偏差、客户评价、卖家表现 |
 
-## 需要上传到仓库的资源（必需）
+数据源为公开的 **Olist Brazilian E-Commerce Public Dataset**。本作品集以历史数据做描述性分析，不代表平台当前状况；RFM 不是预测流失模型，配送延迟与评分的关系不直接证明因果。
 
-```text
-Portfolio/
-├── index.html
-├── styles.css
-├── gallery.js
-├── assets/
-│   ├── 01_overview.png
-│   ├── 02_revenue.png
-│   ├── 03_customers.png
-│   └── 04_fulfillment.png
-└── downloads/
-    ├── Olist_电商经营分析.pbix
-    └── Olist_四页看板.pdf
+## 浏览与文件
+
+在线网页包含项目背景、四个分析主题和四张真实 Power BI 截图。点击分析主题可跳转到对应看板；支持看板标签切换、键盘左右方向键切换，以及点击图片全屏放大。
+
+**网页里展示的是静态看板图片，不能直接操作 Power BI 图表。** 如需使用 Power BI 的原生筛选及交叉联动，请下载 `.pbix` 并在 Power BI Desktop 中打开。部分模型刷新操作可能需要重新配置原始数据文件路径。
+
+| 文件或目录 | 用途 |
+| --- | --- |
+| `index.html` | 单页内容、语义结构和大屏浏览入口 |
+| `styles.css` | 参考个人网站设计体系的响应式样式 |
+| `gallery.js` | 看板切换、键盘操作和原图放大 |
+| `assets/` | 4 张 Power BI 导出图片 |
+| `downloads/` | 原始 `.pbix` 与 PDF |
+| `tests/site_smoke.py` | 桌面 / 移动端基本交互检查 |
+| `docs/` | 项目质量检查及早期 SDD 归档 |
+
+本项目使用**原生 HTML / CSS / JavaScript**，不依赖第三方前端框架或构建步骤；保留截图和源文件的原始格式。
+
+## 本地运行
+
+直接双击 `index.html`，或在仓库目录运行：
+
+```bash
+python -m http.server 8000
 ```
 
-> 重要：当前 GitHub 连接器能够提交文本源代码，但无法直接上传本地的二进制图片和 31 MB 的 .pbix 文件。因此对应资源需要使用 GitHub Desktop 或 Git CLI 从本地推送。没有上传完成时，网站不能视为已发布成功。
+然后打开 `http://localhost:8000/`。
 
-### 最简单的上传方法：GitHub Desktop
+需要运行浏览器冒烟检查时，先安装 Python Playwright 和 Chromium：
 
-1. 下载并解压本对话提供的 **「Olist 作品集·图片大屏与 PBIX 完整包」**。
-2. 在 GitHub Desktop 中克隆 `https://github.com/lineana-lyu/Portfolio.git`。
-3. 从解压后的完整包中将整个 `assets/` 和 `downloads/` 文件夹复制到本地克隆仓库根目录。
-4. 在 GitHub Desktop 中 **Commit to main**，再 **Push origin**。
-5. 打开 GitHub 仓库检查 PNG / PBIX 文件是否已存在，再进入 Settings → Pages，选择 `Deploy from a branch` → `main` / `/(root)`。
+```bash
+pip install playwright
+playwright install chromium
+python tests/site_smoke.py
+```
 
-**注意**：31 MB 的 PBIX 超过 GitHub 浏览器上传通常允许的单文件大小；请用 GitHub Desktop / Git CLI 推送（Git 普通文件上限通常为 100 MB）。
+## 部署
 
-## 文件与功能
+静态网站使用 **GitHub Pages**，从 `main` 分支根目录发布。提交 HTML/CSS/JS 后，Pages 会更新公开页面；`assets/` 和 `downloads/` 与网页位于同一仓库。
 
-- `index.html`：三段式内容、四页图片切换区和下载入口
-- `styles.css`：深色主题与响应式布局
-- `gallery.js`：四图切换与原图链接
-- `assets/`：四张原始看板截图（需补传）
-- `downloads/`：Power BI 原始 PBIX / PDF（需补传）
+## 设计来源与说明
 
-## 限制与审查
+网页的浅灰纸张背景、珊瑚色强调、编辑式标题、导航文字悬浮切换及看板选项卡，沿用个人项目 [personal_website](https://github.com/lineana-lyu/personal_website) 的设计语言；没有移植其全屏 Hero、视频、3D 或复杂动效，以保持数据分析作品集的阅读效率。
 
-- 图片是静态导出，不提供真正 Power BI 内部的筛选、交叉高亮或地图交互。
-- `.pbix` 文件下载后可在 Power BI Desktop 中查看和编辑报表（部分外部数据源可能需要重新配置）。
-- 数据源是 Olist 历史公开数据，页面不宣称当前经营状态或实际运营策略效果。
-- 报表指标口径及 Cohort 不完整观察窗口仍应结合 SQL 复核。
-
-见 [SPEC.md](SPEC.md) 和 [SDD 页面审查](reviews/SDD-05-static-dashboard-gallery.md)。
+页面优化不会改变 Power BI 的统计结果。具体指标口径与数据质量仍以原始 SQL / Power BI 计算逻辑为准；在公开历史数据中得出的建议不等于已落地的运营效果。
