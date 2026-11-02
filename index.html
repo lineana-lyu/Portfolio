@@ -4,39 +4,39 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#efeeea">
-  <meta name="description" content="Olist 电商数据分析作品集：左侧目录切换项目概览、四页 Power BI 报表与 SQL 分析证据。">
-  <title>Olist 电商经营分析 · 数据分析作品集</title>
+  <meta name="description" content="Olist 电商数据分析项目作品集：MySQL 数据核对、用户复购、配送体验与四页 Power BI 看板。">
+  <title>Olist 电商经营分析 · 作品集</title>
   <link rel="stylesheet" href="styles.css">
   <script src="gallery.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#overview">跳转至项目内容</a>
+  <a class="skip-link" href="#overview">跳转至项目概览</a>
   <div class="app-shell">
-    <aside class="sidebar" id="sidebar" aria-label="作品集侧边栏">
+    <aside class="sidebar" id="sidebar" aria-label="作品集侧边导航">
       <div class="sidebar-heading">
-        <a class="brand" href="#overview" aria-label="返回 Olist 项目概览"><span class="brand-symbol">O.</span><span class="brand-type"><strong>OLIST</strong><small>ANALYTICS CASE STUDY</small></span></a>
+        <a class="brand" href="#overview" data-route="overview" aria-label="Olist 项目概览"><span class="brand-symbol">O.</span><span class="brand-type"><strong>OLIST</strong><small>数据分析作品集</small></span></a>
         <button class="sidebar-close" id="sidebar-close" type="button" aria-label="关闭菜单">✕</button>
       </div>
       <div class="sidebar-project">
-        <span class="sidebar-eyebrow">PROJECT / 001</span>
-        <h2>巴西电商<br>经营与用户分析</h2>
-        <p>MySQL · Power BI</p>
+        <span class="sidebar-eyebrow">案例项目 01</span>
+        <h2>电商经营与<br>用户行为分析</h2>
+        <p>MySQL / Power BI</p>
       </div>
-      <nav class="sidebar-nav" aria-label="作品集页面">
-        <p class="nav-group-label">项目</p>
-        <a class="nav-link is-active" href="#overview" data-route="overview" aria-current="page"><span class="nav-symbol" aria-hidden="true">◈</span><span>项目概览</span><span class="nav-arrow" aria-hidden="true">↗</span></a>
-        <p class="nav-group-label">Power BI 看板 <span>04</span></p>
-        <a class="nav-link" href="#operations" data-route="operations"><span class="nav-number">01</span><span>经营总览</span><span class="nav-arrow" aria-hidden="true">↗</span></a>
-        <a class="nav-link" href="#revenue" data-route="revenue"><span class="nav-number">02</span><span>收入分析</span><span class="nav-arrow" aria-hidden="true">↗</span></a>
-        <a class="nav-link" href="#customers" data-route="customers"><span class="nav-number">03</span><span>用户行为</span><span class="nav-arrow" aria-hidden="true">↗</span></a>
-        <a class="nav-link" href="#fulfillment" data-route="fulfillment"><span class="nav-number">04</span><span>履约体验</span><span class="nav-arrow" aria-hidden="true">↗</span></a>
-        <p class="nav-group-label">研究依据</p>
-        <a class="nav-link" href="#evidence" data-route="evidence"><span class="nav-symbol" aria-hidden="true">⌘</span><span>技术证据</span><span class="nav-arrow" aria-hidden="true">↗</span></a>
+      <nav class="sidebar-nav" aria-label="页面导航">
+        <p class="nav-group-label">项目介绍</p>
+        <a class="nav-link is-active" href="#overview" data-route="overview" aria-current="page"><span class="nav-symbol" aria-hidden="true">◈</span><span>项目概览</span></a>
+        <p class="nav-group-label">分析看板 <span>4</span></p>
+        <a class="nav-link" href="#operations" data-route="operations"><span class="nav-number">01</span><span>经营总览</span></a>
+        <a class="nav-link" href="#revenue" data-route="revenue"><span class="nav-number">02</span><span>收入分析</span></a>
+        <a class="nav-link" href="#customers" data-route="customers"><span class="nav-number">03</span><span>用户行为</span></a>
+        <a class="nav-link" href="#fulfillment" data-route="fulfillment"><span class="nav-number">04</span><span>履约体验</span></a>
+        <p class="nav-group-label">项目方法</p>
+        <a class="nav-link" href="#evidence" data-route="evidence"><span class="nav-symbol" aria-hidden="true">⌘</span><span>技术与证据</span></a>
       </nav>
       <div class="sidebar-bottom">
-        <a class="sidebar-download" href="downloads/Olist_电商经营分析.pbix" download><span>下载完整 Power BI 文件</span><span aria-hidden="true">↗</span></a>
-        <div class="sidebar-meta"><a href="https://github.com/lineana-lyu/Portfolio" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://github.com/lineana-lyu/personal_website" target="_blank" rel="noopener noreferrer">PERSONAL SITE ↗</a></div>
-        <p>公开历史数据 · 非实时业务报表</p>
+        <a class="sidebar-download" href="downloads/Olist_电商经营分析.pbix" download><span>下载 Power BI 原文件</span><span aria-hidden="true">↗</span></a>
+        <a class="sidebar-github" href="https://github.com/lineana-lyu/Portfolio" target="_blank" rel="noopener noreferrer">查看 GitHub 项目 <span aria-hidden="true">↗</span></a>
+        <p>公开历史数据 · 非实时报告</p>
       </div>
     </aside>
 
@@ -45,112 +45,128 @@
       <header class="topbar">
         <div class="topbar-leading">
           <button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开侧边菜单" aria-controls="sidebar" aria-expanded="false"><span></span><span></span><span></span></button>
-          <div class="breadcrumb"><span>OLIST / PORTFOLIO</span><span class="breadcrumb-divider">/</span><strong id="current-view-label" aria-live="polite">项目概览</strong></div>
+          <div class="breadcrumb"><span>Olist 分析案例</span><span class="breadcrumb-divider">/</span><strong id="current-view-label" aria-live="polite">项目概览</strong></div>
         </div>
-        <div class="topbar-trailing"><span class="topbar-descriptor">DATA ANALYTICS · CASE STUDY</span><a href="downloads/Olist_四页看板.pdf" download>下载 PDF <span aria-hidden="true">↗</span></a></div>
+        <a class="topbar-download" href="downloads/Olist_四页看板.pdf" download>下载四页报告 <span aria-hidden="true">↗</span></a>
       </header>
 
       <main class="workspace" id="main" tabindex="-1">
-        <section class="view is-active" data-view="overview" id="view-overview" aria-labelledby="overview-title">
-          <div class="page-heading">
-            <div class="page-eyebrow"><span>PROJECT OVERVIEW</span><span>01 / 06</span></div>
-            <h1 id="overview-title">让每一张看板，<br>都有可解释的分析结论<span class="coral-dot">.</span></h1>
-            <p class="page-description">以 Olist 公开交易数据为基础，关联九张业务表，从经营表现、收入结构、用户行为和履约体验四个方向完成 MySQL 分析与 Power BI 可视化。</p>
-          </div>
+        <section class="view is-active view-overview" data-view="overview" id="view-overview" aria-labelledby="overview-title">
+          <header class="overview-heading">
+            <p class="eyebrow">CASE STUDY <span aria-hidden="true">/</span> OLIST BRAZIL</p>
+            <h1 id="overview-title">Olist 电商经营分析<span class="coral-dot">.</span></h1>
+            <p class="overview-lead">从经营表现到用户行为，基于九张业务表建立可解释、可追溯的分析结果。</p>
+            <p class="project-meta"><span>MySQL</span><span>Python</span><span>Power BI</span><span>四个分析主题</span></p>
+          </header>
 
-          <div class="overview-meta" aria-label="项目概况">
-            <div><span>DATASET</span><strong>Olist 电商公开历史数据</strong></div>
-            <div><span>TOOLS</span><strong>MySQL / Python / Power BI</strong></div>
-            <div><span>DELIVERABLES</span><strong>四页看板 · PBIX · SQL</strong></div>
-          </div>
-
-          <div class="section-subhead"><div><span class="section-counter">01</span><h2>关键分析成果</h2></div><a class="quiet-link" href="#evidence">查看方法与证据 ↗</a></div>
-          <div class="insight-grid">
+          <div class="metric-strip" aria-label="项目主要分析成果">
             <article class="insight-card insight-card-feature">
-              <div class="insight-kicker">CROSS-DIMENSION VALIDATION <span>NOTEBOOK</span></div>
-              <div class="insight-value">R$13.49<span>M</span></div>
-              <h3>四个维度的商品收入汇总一致</h3>
-              <p>月度、品类、RFM 用户和州级的统计结果均为 <strong>R$13,494,400.74</strong>，体现了不同分析粒度的指标核对。</p>
-              <small>已执行 Notebook · 商品收入不含运费</small>
+              <p class="metric-label">商品收入核对</p>
+              <p class="insight-value">R$13.49<span>M</span></p>
+              <p class="metric-caption">四种分析维度汇总一致</p>
             </article>
             <article class="insight-card">
-              <div class="insight-kicker">CUSTOMER BEHAVIOR <span>POWER BI</span></div>
-              <div class="insight-value">3.04<span>%</span></div>
-              <h3>历史重复购买用户占比较小</h3>
-              <p>94,983 名历史购买用户中，2,887 人至少购买两次；使用 Cohort 与 RFM 辅助分析行为差异。</p>
-              <small>历史复购统计 ≠ 未来流失概率</small>
+              <p class="metric-label">历史复购率</p>
+              <p class="insight-value">3.04<span>%</span></p>
+              <p class="metric-caption">94,983 名购买用户中的复购占比</p>
             </article>
             <article class="insight-card">
-              <div class="insight-kicker">DELIVERY EXPERIENCE <span>POWER BI</span></div>
-              <div class="insight-value insight-value-pair">4.29 <em>→</em> 1.70</div>
-              <h3>严重延迟组的平均评分更低</h3>
-              <p>提前送达组的平均评分约为 4.29，晚到 8 天及以上的订单组约为 1.70。</p>
-              <small>分组相关性，不等于已证明因果</small>
+              <p class="metric-label">配送与评分</p>
+              <p class="insight-value insight-value-pair">4.29 <em>→</em> 1.70</p>
+              <p class="metric-caption">提前送达组与严重延迟组均分</p>
             </article>
           </div>
 
-          <div class="section-subhead section-subhead-tight"><div><span class="section-counter">02</span><h2>选择分析主题</h2></div><span class="section-assist">点击卡片，直接切换右侧内容</span></div>
-          <div class="topic-grid" aria-label="选择 Power BI 分析页面">
-            <a class="topic-card" href="#operations" data-route="operations"><span>01 / 经营总览</span><strong>交易规模与趋势</strong><i aria-hidden="true">↗</i></a>
-            <a class="topic-card" href="#revenue" data-route="revenue"><span>02 / 收入分析</span><strong>品类、地域与支付</strong><i aria-hidden="true">↗</i></a>
-            <a class="topic-card" href="#customers" data-route="customers"><span>03 / 用户行为</span><strong>复购、Cohort、RFM</strong><i aria-hidden="true">↗</i></a>
-            <a class="topic-card" href="#fulfillment" data-route="fulfillment"><span>04 / 履约体验</span><strong>配送时效与评价</strong><i aria-hidden="true">↗</i></a>
-          </div>
-          <p class="content-footnote">注：以上成果来自原项目 Notebook 执行输出和现有 Power BI 看板；不代表已实施的运营优化效果。</p>
+          <section class="preview-section" aria-labelledby="preview-heading">
+            <div class="section-heading">
+              <h2 id="preview-heading">项目成果预览</h2>
+              <span>POWER BI · 4 PAGES</span>
+            </div>
+            <div class="preview-layout">
+              <a class="preview-image-link" href="#operations" data-route="operations" aria-label="打开经营总览看板">
+                <img src="assets/01_overview.png" alt="Olist Power BI 经营总览看板原始截图" width="1551" height="874" loading="eager">
+                <span>查看完整看板 <span aria-hidden="true">↗</span></span>
+              </a>
+              <div class="preview-story">
+                <p class="eyebrow">WHAT I DID</p>
+                <h3>从数据口径<br>到业务判断</h3>
+                <div class="story-line"><span>01</span><div><strong>处理关联与统计粒度</strong><p>识别用户、订单、商品明细及评价的一对多关系。</p></div></div>
+                <div class="story-line"><span>02</span><div><strong>交叉核对核心金额</strong><p>月度、品类、RFM 用户和州级商品收入结果一致。</p></div></div>
+                <div class="story-line"><span>03</span><div><strong>分析用户与履约</strong><p>研究历史复购、Cohort 及配送时效与评价的关联。</p></div></div>
+                <a href="#evidence" data-route="evidence" class="text-link">了解分析方法 <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </section>
+          <p class="content-footnote">结果来自已执行的 Notebook 与原 Power BI 看板。历史复购不等于预测流失；配送评分的组间差异不证明因果。</p>
         </section>
 
-        <section class="view" data-view="dashboard" id="view-dashboard" aria-labelledby="dashboard-title" hidden>
-          <div class="page-heading dashboard-heading">
-            <div class="page-eyebrow"><span id="dashboard-eyebrow">POWER BI / OPERATIONS</span><span id="dashboard-progress">01 / 04</span></div>
-            <div class="dashboard-heading-row">
-              <div><h1 id="dashboard-title">经营总览</h1><p class="page-description" id="dashboard-description">平台交易规模和月度趋势如何？</p></div>
-              <div class="dashboard-pager" aria-label="切换看板"><button id="dashboard-prev" type="button" aria-label="上一页看板">←</button><span id="dashboard-counter">01 / 04</span><button id="dashboard-next" type="button" aria-label="下一页看板">→</button></div>
+        <section class="view view-report" data-view="dashboard" id="view-dashboard" aria-labelledby="dashboard-title" hidden>
+          <header class="report-heading">
+            <div class="report-heading-main">
+              <p class="eyebrow" id="dashboard-eyebrow">POWER BI / OVERVIEW</p>
+              <h1 id="dashboard-title">经营总览</h1>
+              <p class="report-subtitle" id="dashboard-description">平台交易规模、月度商品收入和订单趋势如何变化？</p>
+            </div>
+            <div class="report-controls">
+              <span class="report-page-index" id="dashboard-progress">01 / 04</span>
+              <div class="dashboard-pager" aria-label="切换看板">
+                <button id="dashboard-prev" type="button" aria-label="上一页看板">←</button>
+                <span id="dashboard-counter">01 / 04</span>
+                <button id="dashboard-next" type="button" aria-label="下一页看板">→</button>
+              </div>
+            </div>
+          </header>
+          <div class="dashboard-insight">
+            <span class="dashboard-insight-eyebrow">本页发现</span>
+            <p id="dashboard-takeaway">商品收入汇总 R$13,494,400.74；结合月度订单量及商品收入趋势观察历史交易表现。</p>
+          </div>
+          <figure class="dashboard-figure">
+            <button id="image-zoom-trigger" class="dashboard-image-button" type="button" aria-label="放大查看当前 Power BI 看板">
+              <img id="dashboard-image" src="assets/01_overview.png" alt="Olist Power BI 经营总览看板" width="1551" height="874" fetchpriority="high">
+              <span class="zoom-hint" aria-hidden="true">点击放大 ↗</span>
+            </button>
+            <figcaption class="dashboard-caption"><span id="dashboard-caption">经营总览 · GMV、有效订单与月度趋势</span><a id="original-image" href="assets/01_overview.png" target="_blank" rel="noopener noreferrer">查看高清原图 ↗</a></figcaption>
+          </figure>
+          <div class="report-footer">
+            <span>原始静态看板截图 · Power BI 原生交互请下载 PBIX</span>
+            <div class="report-downloads"><a href="downloads/Olist_电商经营分析.pbix" download>下载 PBIX ↗</a><a href="downloads/Olist_四页看板.pdf" download>下载 PDF ↗</a></div>
+          </div>
+          <p class="asset-error" id="assets-missing" role="status" hidden>看板图片暂时无法加载，请检查 assets 文件夹。</p>
+        </section>
+
+        <section class="view view-evidence" data-view="evidence" id="view-evidence" aria-labelledby="evidence-title" hidden>
+          <header class="evidence-heading">
+            <p class="eyebrow">METHODOLOGY / EVIDENCE</p>
+            <h1 id="evidence-title">分析过程与技术证据<span class="coral-dot">.</span></h1>
+            <p class="evidence-lead">不以工具名称代替分析能力。下面是实际分析中处理的数据问题，以及对应的 SQL 与口径说明。</p>
+          </header>
+          <div class="evidence-layout">
+            <div class="method-column">
+              <div class="column-heading"><h2>分析方法</h2><span>01 — 03</span></div>
+              <article class="method-step"><span class="step-id">01</span><div><h3>先确定统计粒度</h3><p>区分 <code>customer_unique_id</code> 与 <code>customer_id</code>，识别订单与商品、评价等关联中的一对多关系，避免重复统计。</p></div></article>
+              <article class="method-step"><span class="step-id">02</span><div><h3>再核对指标口径</h3><p>跨月度、品类、用户与州四种聚合口径核对商品收入，均为 <strong>R$13,494,400.74</strong>（不含运费）。</p></div></article>
+              <article class="method-step"><span class="step-id">03</span><div><h3>最后研究行为与体验</h3><p>使用 Cohort 与 RFM 描述购买行为；按配送延迟天数分组，观察不同订单组的评分差异。</p></div></article>
+            </div>
+            <div class="resource-column">
+              <div class="column-heading"><h2>SQL 与成果依据</h2><span>GITHUB</span></div>
+              <div class="resource-list">
+                <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/sql/01_customer_repeat_purchase.sql" target="_blank" rel="noopener noreferrer"><div><strong>历史复购 SQL</strong><small>用户去重 · 订单频次</small></div><span aria-hidden="true">↗</span></a>
+                <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/sql/02_cohort_monthly_repeat.sql" target="_blank" rel="noopener noreferrer"><div><strong>Cohort 月度回购 SQL</strong><small>首购月份 · 观察窗口</small></div><span aria-hidden="true">↗</span></a>
+                <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/sql/03_delivery_review_by_delay.sql" target="_blank" rel="noopener noreferrer"><div><strong>配送与客户评分 SQL</strong><small>订单级评价 · 延迟分组</small></div><span aria-hidden="true">↗</span></a>
+                <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/docs/CASE_STUDY_FINDINGS.md" target="_blank" rel="noopener noreferrer"><div><strong>分析结果与口径说明</strong><small>执行证据 · 数字与限制</small></div><span aria-hidden="true">↗</span></a>
+              </div>
+              <div class="resource-note"><strong>关于复现</strong><p>原项目 SQL 已运行并保存输出；以上三份 SQL 是后续整理的修订版，尚未在原数据库重新执行。网页展示的是历史数据分析，不代表真实运营实验效果。</p></div>
             </div>
           </div>
-          <div class="dashboard-container">
-            <figure class="dashboard-figure">
-              <div class="dashboard-windowbar" aria-hidden="true"><span class="window-dots"><i></i><i></i><i></i></span><span>POWER BI / OLIST</span><span id="dashboard-window-page">01 — OVERVIEW</span></div>
-              <button id="image-zoom-trigger" class="dashboard-image-button" type="button" aria-label="放大查看当前 Power BI 看板">
-                <img id="dashboard-image" src="assets/01_overview.png" width="1551" height="874" alt="Olist 电商经营总览 Power BI 看板" fetchpriority="high">
-                <span class="zoom-hint" aria-hidden="true">放大看板 ↗</span>
-              </button>
-              <figcaption class="dashboard-caption"><span id="dashboard-caption">经营总览 · GMV、有效订单与月度趋势</span><a id="original-image" href="assets/01_overview.png" target="_blank" rel="noopener noreferrer">高清原图 ↗</a></figcaption>
-            </figure>
-            <div class="dashboard-insight"><div><span class="dashboard-insight-eyebrow">ANALYST NOTE / 本页看点</span><p id="dashboard-takeaway">商品收入 R$13,494,400.74。结合月度订单和商品收入趋势观察历史经营表现。</p></div><a href="docs/CASE_STUDY_FINDINGS.md" id="dashboard-source-link" target="_blank" rel="noopener noreferrer" hidden>分析依据 ↗</a></div>
-            <div class="dashboard-bottom"><span>原始 Power BI 截图 · 网页不提供图表交叉筛选</span><div><a href="downloads/Olist_电商经营分析.pbix" download>下载 PBIX ↗</a><a href="downloads/Olist_四页看板.pdf" download>下载 PDF ↗</a></div></div>
-            <p class="asset-error" id="assets-missing" role="status" hidden>图片暂时无法加载，请检查仓库 assets 目录。</p>
-          </div>
-        </section>
-
-        <section class="view" data-view="evidence" id="view-evidence" aria-labelledby="evidence-title" hidden>
-          <div class="page-heading">
-            <div class="page-eyebrow"><span>RESEARCH / METHODOLOGY</span><span>06 / 06</span></div>
-            <h1 id="evidence-title">分析过程与技术证据<span class="coral-dot">.</span></h1>
-            <p class="page-description">展示指标选择、数据粒度处理和可复核脚本，而不是重复陈列看板里的图表。</p>
-          </div>
-          <div class="method-overview">
-            <div class="method-card"><span>01 / DATA MODEL</span><h2>九张业务表</h2><p>识别真实用户、订单与商品明细、订单与评价的一对多关系，避免 JOIN 放大统计结果。</p><code>customer_unique_id · order_id</code></div>
-            <div class="method-card"><span>02 / QUALITY CONTROL</span><h2>收入多维核对</h2><p>从月度、品类、用户与州四种聚合粒度核对商品收入，均为 R$13,494,400.74。</p><code>SUM(price) · COUNT(DISTINCT ...)</code></div>
-            <div class="method-card"><span>03 / BUSINESS ANALYSIS</span><h2>分层与履约</h2><p>分析历史复购和 Cohort，并按自然日配送偏差分组观察评价差异与卖家表现。</p><code>CTE · Window Functions · RFM</code></div>
-          </div>
-          <div class="section-subhead section-subhead-tight"><div><span class="section-counter">SQL</span><h2>分析脚本与依据</h2></div></div>
-          <div class="resource-list">
-            <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/sql/01_customer_repeat_purchase.sql" target="_blank" rel="noopener noreferrer"><span class="resource-num">01</span><div><strong>历史复购 SQL</strong><small>真实用户标识、去重订单、历史复购</small></div><span>↗</span></a>
-            <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/sql/02_cohort_monthly_repeat.sql" target="_blank" rel="noopener noreferrer"><span class="resource-num">02</span><div><strong>Cohort 月度回购 SQL</strong><small>观察窗口、零回购与未观测月份</small></div><span>↗</span></a>
-            <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/sql/03_delivery_review_by_delay.sql" target="_blank" rel="noopener noreferrer"><span class="resource-num">03</span><div><strong>配送时效 × 客户评分 SQL</strong><small>订单级聚合、评价样本数与覆盖率</small></div><span>↗</span></a>
-            <a class="resource-item" href="https://github.com/lineana-lyu/Portfolio/blob/main/docs/CASE_STUDY_FINDINGS.md" target="_blank" rel="noopener noreferrer"><span class="resource-num">04</span><div><strong>成果与指标口径说明</strong><small>Notebook 实际输出、看板数字及研究边界</small></div><span>↗</span></a>
-          </div>
-          <p class="evidence-disclaimer">原项目 SQL 已运行并保存结果。以上三份 SQL 是后续整理的口径修订版，尚未在原数据库重新执行；历史复购不代表流失预测，配送评分差异不代表因果结论。</p>
         </section>
       </main>
-      <div class="workspace-status"><span>OLIST ANALYTICS · HISTORICAL PUBLIC DATA</span><span id="status-page">OVERVIEW</span></div>
+      <div class="workspace-status"><span>OLIST · E-COMMERCE ANALYTICS</span><span id="status-page">OVERVIEW</span></div>
     </div>
   </div>
-
   <dialog class="lightbox" id="zoom-dialog" aria-label="Power BI 大屏查看">
     <div class="lightbox-bar"><strong id="zoom-caption">经营总览</strong><div class="lightbox-actions"><button type="button" id="zoom-prev" aria-label="上一张看板">←</button><span id="zoom-counter">01 / 04</span><button type="button" id="zoom-next" aria-label="下一张看板">→</button><button type="button" id="zoom-close" aria-label="关闭看板">✕</button></div></div>
     <div class="lightbox-body"><img id="zoom-image" src="assets/01_overview.png" alt="Olist 经营总览看板"></div>
-    <p class="lightbox-tip">按 ← → 切换 · Esc 关闭 · 手机横向滑动查看</p>
+    <p class="lightbox-tip">按 ← → 切换 · Esc 关闭 · 手机可横向平移查看</p>
   </dialog>
 </body>
 </html>
