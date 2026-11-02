@@ -1,113 +1,123 @@
-"""UI smoke tests for the Olist Analytics left-sidebar workbench.
-
-Requirements:
-    pip install playwright
-    playwright install chromium
-    python tests/site_smoke.py
-"""
+"""Olist one-screen UI regression: layout and image bounds, not just CSS flags."""
 from pathlib import Path
-
 from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-for name in (
-    "assets/01_overview.png",
-    "assets/02_revenue.png",
-    "assets/03_customers.png",
-    "assets/04_fulfillment.png",
-    "downloads/Olist_电商经营分析.pbix",
-    "downloads/Olist_四页看板.pdf",
-):
-    assert (ROOT / name).is_file(), f"Missing source asset: {name}"
+OUT = ROOT / "test-results"
+OUT.mkdir(exist_ok=True)
+URI = (ROOT / "index.html").as_uri()
+IMAGES = {
+    "operations": "assets/01_overview.png",
+    "revenue": "assets/02_revenue.png",
+    "customers": "assets/03_customers.png",
+    "fulfillment": "assets/04_fulfillment.png",
+}
+for path in [*IMAGES.values(), "downloads/Olist_电商经营分析.pbix", "downloads/Olist_四页看板.pdf"]:
+    assert (ROOT / path).is_file(), f"Missing: {path}"
 
+BOUNDS_JS = """(selectors) => {
+  const bounds = (sel) => {
+    const el=document.querySelector(sel);
+    const r=el.getBoundingClientRect();
+    return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,
+            height:r.height,width:r.width,scrollHeight:el.scrollHeight,
+            clientHeight:el.clientHeight, scrollWidth:el.scrollWidth,
+            clientWidth:el.clientWidth};
+  };
+  const visible=Object.fromEntries(selectors.map(x=>[x,bounds(x)]));
+  return {visible, viewport:{width:innerWidth,height:innerHeight},
+          document:{height:document.documentElement.scrollHeight,
+                    clientHeight:document.documentElement.clientHeight,
+                    width:document.documentElement.scrollWidth,
+                    clientWidth:document.documentElement.clientWidth}};
+}"""
 
-def assert_image_loaded(page):
-    page.wait_for_function(
-        "() => { const img = document.getElementById('dashboard-image'); "
-        "return img.complete && img.naturalWidth > 0; }"
+def layout(page, route, viewport, desktop):
+    selectors = {
+        "overview": ["#view-overview", ".overview-header", ".metric-strip",
+                     ".overview-stage", ".preview-image-link", ".preview-image-link img",
+                     ".overview-aside", ".aside-link"],
+        "evidence": ["#view-evidence", ".evidence-header", ".evidence-grid",
+                     ".evidence-row:last-child", ".evidence-footer"],
+    }.get(route, ["#view-dashboard", ".report-heading", ".dashboard-insight",
+                  ".dashboard-figure", ".dashboard-image-button",
+                  "#dashboard-image", ".dashboard-caption", ".report-footer"])
+    all_rects = page.evaluate(BOUNDS_JS, selectors)
+    assert all_rects["document"]["width"] <= all_rects["document"]["clientWidth"] + 2, (route, all_rects)
+    if not desktop:
+        return
+    assert all_rects["document"]["height"] <= all_rects["document"]["clientHeight"] + 2, (route, all_rects)
+    work = page.locator("#main").evaluate(
+        "(e)=>({scroll:e.scrollHeight,client:e.clientHeight})"
     )
-
+    assert work["scroll"] <= work["client"] + 2, (route, "main scroll", work)
+    current_view = all_rects["visible"][selectors[0]]
+    assert current_view["scrollHeight"] <= current_view["clientHeight"] + 2, (
+        route, "view internal scroll", current_view
+    )
+    for sel, rect in all_rects["visible"].items():
+        assert rect["height"] > 0 and rect["width"] > 0, (route, sel, rect)
+        assert rect["top"] >= 45 and rect["bottom"] <= viewport[1] - 20, (
+            route, sel, "VERTICAL CLIP", rect
+        )
+        assert rect["left"] >= 0 and rect["right"] <= viewport[0] + 1, (
+            route, sel, "HORIZONTAL CLIP", rect
+        )
+    if route in IMAGES:
+        image = all_rects["visible"]["#dashboard-image"]
+        button = all_rects["visible"][".dashboard-image-button"]
+        assert image["top"] >= button["top"] - 1 and image["bottom"] <= button["bottom"] + 1
+        assert image["left"] >= button["left"] - 1 and image["right"] <= button["right"] + 1
+        # Original 1551 x 874 image, displayed without cropping or distortion
+        assert abs(image["width"] / image["height"] - 1551 / 874) < 0.02, (route, image)
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
-    for width, height in [(1440, 900), (1024, 768), (375, 812)]:
+    for size in [(1366, 768), (1440, 900), (1024, 768), (375, 812)]:
+        width, height = size
+        desktop = width > 960
         page = browser.new_page(viewport={"width": width, "height": height})
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
-        page.goto((ROOT / "index.html").as_uri())
-
+        page.goto(URI + "#overview")
+        expect(page.locator("#view-overview")).to_be_visible()
         assert page.locator(".sidebar-nav .nav-link").count() == 6
-        assert page.locator('[data-view="overview"]').is_visible()
-        expect(page.locator('[data-view="dashboard"]')).to_be_hidden()
         assert page.locator(".insight-card").count() == 3
-        assert page.locator(".topic-card").count() == 0, "Old navigation cards must be removed."
-        assert page.locator(".preview-image-link img").evaluate(
-            "(image) => image.complete && image.naturalWidth > 0"
-        ), "A genuine dashboard preview must load."
-        expect(page.locator("#overview-title")).to_contain_text("Olist 电商经营分析")
-        assert page.locator(".overview-lead").evaluate(
-            "(element) => parseFloat(getComputedStyle(element).fontSize) >= 14"
-        ), "Readable overview text must not use tiny type."
-        if width >= 1200:
-            assert page.locator(".preview-image-link").evaluate(
-                "(element) => element.getBoundingClientRect().width > 580"
-            ), "Desktop preview should be visually prominent."
         assert "13,494,400.74" in page.locator("#view-overview").inner_text()
-        assert "3.04" in page.locator("#view-overview").inner_text()
-        assert page.locator("body").evaluate(
-            "(element) => getComputedStyle(element).overflow === 'hidden'"
-        ), "Document should not be a vertically scrolling long page."
-
-        # Switch from left navigation; on mobile open the drawer first.
-        if width < 961:
-            page.locator("#menu-toggle").click()
-            assert page.locator("body").evaluate(
-                "(element) => element.classList.contains('sidebar-open')"
-            )
-        page.locator('.sidebar-nav a[data-route="customers"]').click()
-        expect(page.locator("#view-dashboard")).to_be_visible()
-        expect(page.locator('[data-view="overview"]')).to_be_hidden()
-        expect(page.locator("#dashboard-title")).to_have_text("用户行为")
-        expect(page.locator("#dashboard-image")).to_have_attribute("src", "assets/03_customers.png")
-        assert_image_loaded(page)
-        assert page.locator("#dashboard-image").evaluate(
-            "(element) => element.getBoundingClientRect().width > 270"
-        ), "Original Power BI screenshot should remain prominent."
-        assert "3.04%" in page.locator("#dashboard-takeaway").inner_text()
-        assert page.locator('.sidebar-nav a[data-route="customers"]').get_attribute("aria-current") == "page"
-        if width < 961:
-            assert not page.locator("body").evaluate(
-                "(element) => element.classList.contains('sidebar-open')"
-            )
-
-        # Modal zoom and keyboard navigation follow the sidebar routes.
-        page.locator("#image-zoom-trigger").click()
-        assert page.locator("#zoom-dialog").evaluate("(el) => el.open")
-        page.keyboard.press("ArrowRight")
-        expect(page.locator("#dashboard-title")).to_have_text("履约体验")
-        expect(page.locator("#zoom-image")).to_have_attribute("src", "assets/04_fulfillment.png")
-        page.keyboard.press("Escape")
-        assert not page.locator("#zoom-dialog").evaluate("(el) => el.open")
-
-        # Route buttons, browser hash navigation, evidence page.
-        page.locator("#dashboard-next").click()
-        expect(page.locator("#dashboard-title")).to_have_text("经营总览")
-        assert_image_loaded(page)
+        expect(page.locator(".preview-image-link img")).to_have_js_property("complete", True)
+        assert page.locator(".preview-image-link img").evaluate("(e)=>e.naturalWidth === 1551")
+        layout(page, "overview", size, desktop)
+        page.screenshot(path=str(OUT / f"{width}-overview.png"))
+        for route, src in IMAGES.items():
+            page.evaluate("(route) => location.hash = '#' + route", route)
+            expect(page.locator("#view-dashboard")).to_be_visible()
+            expect(page.locator("#dashboard-image")).to_have_attribute("src", src)
+            page.wait_for_function("() => document.querySelector('#dashboard-image').naturalWidth === 1551")
+            assert page.locator(".sidebar-nav a.is-active").get_attribute("data-route") == route
+            layout(page, route, size, desktop)
+            if route == "customers":
+                assert "3.04%" in page.locator("#dashboard-takeaway").inner_text()
+                page.screenshot(path=str(OUT / f"{width}-customers.png"))
         page.evaluate("location.hash = '#evidence'")
         expect(page.locator("#view-evidence")).to_be_visible()
+        assert page.locator(".evidence-row").count() == 3
         assert page.locator(".resource-item").count() == 4
-        assert page.locator(".method-step").count() == 3
-        assert page.locator(".resource-item strong").first.evaluate(
-            "(element) => parseFloat(getComputedStyle(element).fontSize) >= 14"
-        ), "Evidence links must use readable text."
-        expect(page.locator("#view-dashboard")).to_be_hidden()
+        layout(page, "evidence", size, desktop)
+        page.screenshot(path=str(OUT / f"{width}-evidence.png"))
 
-        dims = page.evaluate(
-            "() => ({ viewport:document.documentElement.clientWidth, "
-            "document:document.documentElement.scrollWidth })"
-        )
-        assert dims["document"] <= dims["viewport"] + 1, dims
+        # Real sidebar navigation + gallery dialog and keyboard.
+        if not desktop:
+            page.locator("#menu-toggle").click()
+            assert page.locator("body").evaluate("(e)=>e.classList.contains('sidebar-open')")
+        page.locator('.sidebar-nav a[data-route="operations"]').click()
+        expect(page.locator("#dashboard-image")).to_have_attribute("src", IMAGES["operations"])
+        page.locator("#image-zoom-trigger").click()
+        assert page.locator("#zoom-dialog").evaluate("(e)=>e.open")
+        page.keyboard.press("ArrowRight")
+        expect(page.locator("#dashboard-image")).to_have_attribute("src", IMAGES["revenue"])
+        page.keyboard.press("Escape")
+        assert not page.locator("#zoom-dialog").evaluate("(e)=>e.open")
         assert not errors, errors
-        print(f"PASS {width}x{height}: editorial type / dashboard preview / fixed sidebar / routes / gallery / evidence")
+        print(f"PASS {width}x{height} all routes, no desktop scroll/clip, image contain, navigation and zoom")
         page.close()
     browser.close()
