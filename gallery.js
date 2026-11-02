@@ -45,7 +45,6 @@
   const main = document.getElementById('main');
   const breadcrumb = document.getElementById('current-view-label');
   const statusPage = document.getElementById('status-page');
-  const sidebar = document.getElementById('sidebar');
   const toggleButton = document.getElementById('menu-toggle');
   const closeButton = document.getElementById('sidebar-close');
   const mobileScrim = document.getElementById('mobile-scrim');
@@ -57,7 +56,6 @@
   let currentRoute = 'overview';
   let reportIndex = 0;
 
-  const pad = (index) => String(index + 1).padStart(2, '0');
   const labelFor = (route) => route === 'overview' ? '项目概览'
     : route === 'evidence' ? '技术证据'
     : reportPages.find(page => page.route === route)?.label ?? '项目概览';
@@ -79,7 +77,6 @@
       'dashboard-eyebrow':'POWER BI / ' + page.code,
       'dashboard-progress':page.index + ' / 04',
       'dashboard-counter':page.index + ' / 04',
-      'dashboard-window-page':page.index + ' — ' + page.code,
       'dashboard-caption':page.caption,
       'dashboard-takeaway':page.takeaway,
       'zoom-caption':page.label,
